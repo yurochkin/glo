@@ -80,5 +80,5 @@ const targetMonth = getTargetMonth(mission, accumulatedMonth);
 
 (targetMonth >= 0) ?
     console.log(`Цель будет достигнута за: ${targetMonth} месяцев`) :
-    console.log(`Цель не будет достигнута`);
+     console.log(`Цель не будет достигнута`);
     console.log('Бюджет на день: ', Math.floor(budgetDay));

@@ -1,40 +1,6 @@
 'use strict';
-let money = +prompt('Ваш месячный доход?');
-
-let addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую');
-let deposit = confirm('Есть ли у вас депозит в банке?');
-
-let mission = 777;
-let period = 8;
 
 
-
-console.log('money: ', typeof money);
-console.log('income: ', typeof income);
-console.log('deposit: ', typeof deposit);
-console.log('length_addExpenses: ', addExpenses.length);
-console.log('Период равен ${period} месяцев.');
-console.log('Цель заработать ${mission} рублей/долларов/гривен/юани');
-console.log(addExpenses.toLocaleLowerCase().split(', '));
-
-
-
-
-const budgetDay = (money / 30);
-console.log('Бюджет на день: ', Math.floor(budgetDay));
-if (budgetDay === 1200) {
-    console.log('Почти успеха достиг');
-} else if (budgetDay === 600) {
-    console.log('почти средний уровень дохода');
-} else if (budgetDay > 1200) {
-    console.log('У вас высокий уровень дохода');
-} else if (budgetDay < 1200 && budgetDay > 600) {
-    console.log('У вас средний уровень дохода');
-} else if (budgetDay < 0) {
-    console.log('Что то пошло не так');
-} else {
-    console.log('уровень дохода ниже среднего');
-}
 
 const isNumber = (n) => {
     console.log('n: ', n);
@@ -42,6 +8,16 @@ const isNumber = (n) => {
     console.log(isFinite(n));
     return !isNaN(parseFloat(n)) && isFinite(n);
 };
+
+let money,
+    income = 'фриланс',
+    addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую',
+        'интернет, такси, коммуналка'),
+    deposit = confirm('Есть ли у вас депозит в банке?'),
+    mission = 100000,
+    period = 12;
+
+// 1) Переписать функцию start циклом do while
 do {
     money = prompt('Ваш месячный доход?');
 } while (!isNumber(money));
@@ -63,14 +39,16 @@ const getExpensesMonth = () => {
     return sum;
 };
 
+let expensesAmount = getExpensesMonth();
 
-
-console.log(getExpensesMonth());
 const getAccumulatedMonth = (moneyMonth, expensesMonth) => {
-    if (!moneyMonth) { moneyMonth = 0; }
+    if (!moneyMonth) {
+        moneyMonth = 0;
+    }
     return moneyMonth - expensesMonth;
 };
-const accumulatedMonth = getAccumulatedMonth(money, getExpensesMonth());
+
+const accumulatedMonth = getAccumulatedMonth(money, expensesAmount);
 
 const getTargetMonth = (myMiss, budgetMonth) => {
     return Math.ceil(myMiss / budgetMonth);
@@ -78,7 +56,33 @@ const getTargetMonth = (myMiss, budgetMonth) => {
 
 const targetMonth = getTargetMonth(mission, accumulatedMonth);
 
+const budgetDay = accumulatedMonth / 30;
+
+const showTypeOf = (data) => {
+    console.log(data, typeof (data));
+};
+
+showTypeOf(money);
+showTypeOf(income);
+showTypeOf(deposit);
+
+console.log(addExpenses.toLocaleLowerCase().split(', '));
+console.log('Обязательные расходы за месяц: ', expensesAmount);
+
+
 (targetMonth >= 0) ?
     console.log(`Цель будет достигнута за: ${targetMonth} месяцев`) :
-     console.log(`Цель не будет достигнута`);
+    console.log(`Цель не будет достигнута`);
+
     console.log('Бюджет на день: ', Math.floor(budgetDay));
+
+const getStatusIncome = (budget) => {
+    return isNaN(budget) ? 'Упс! Где-то закралась ошибка...' :
+        (budget < 0) ? 'Что то пошло не так' :
+        (budget < 600) ? 'К сожалению у вас уровень дохода ниже среднего' :
+        (budget === 600) ? 'У вас почти средний уровень дохода, но немного не хватает...' :
+        (budget < 1200) ? 'У вас средний уровень дохода' :
+        (budget === 1200) ? 'У вас почти получилось попасть в группу с высокий уровень дохода! Постарайтесь лучше!' :
+        'У вас высокий уровень дохода';
+};
+console.log('getStatusIncome(): ', getStatusIncome(budgetDay));
